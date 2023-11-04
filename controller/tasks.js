@@ -32,8 +32,17 @@ const getTask = async (req, res) => {
   }
 }
 
-const updateTask = (req, res) => {
-  res.send('update Tasks Success')
+const updateTask = async (req, res) => {
+  try {
+    const { id: taskID } = await req.params
+    const task = await Task.findByIdAndUpdate({ _id: taskID }, req.body, {
+      new: true,
+      runValidators: true,
+    })
+    res.status(200).json({ task })
+  } catch (error) {
+    res.status(500).json({ msg: error.message })
+  }
 }
 
 const deleteTask = async (req, res) => {
